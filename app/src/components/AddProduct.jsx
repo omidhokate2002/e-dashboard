@@ -24,7 +24,10 @@ const AddProduct = () => {
         category,
         company,
       }),
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `bearer ${JSON.parse(localStorage.getItem("token"))}`,
+      },
     });
 
     const response = await result.json();

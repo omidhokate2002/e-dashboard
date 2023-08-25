@@ -10,7 +10,11 @@ const Product = () => {
 
   const getProducts = async () => {
     try {
-      const response = await fetch("http://localhost:5000/products");
+      const response = await fetch("http://localhost:5000/products", {
+        headers: {
+          authorization: `bearer ${JSON.parse(localStorage.getItem("token"))}`,
+        },
+      });
       const data = await response.json();
       setProducts(data);
     } catch (error) {
@@ -22,6 +26,9 @@ const Product = () => {
     try {
       const response = await fetch(`http://localhost:5000/product/${id}`, {
         method: "DELETE",
+        headers: {
+          authorization: `bearer ${JSON.parse(localStorage.getItem("token"))}`,
+        },
       });
 
       if (response.ok) {
@@ -38,7 +45,13 @@ const Product = () => {
     const key = event.target.value;
     if (key) {
       try {
-        const response = await fetch(`http://localhost:5000/search/${key}`);
+        const response = await fetch(`http://localhost:5000/search/${key}`, {
+          headers: {
+            authorization: `bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
+          },
+        });
         const result = await response.json();
         if (response.ok) {
           setProducts(result);

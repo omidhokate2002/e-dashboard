@@ -3,8 +3,10 @@ import cors from "cors";
 import "./db/config.js";
 import User from "./db/user.js";
 import Product from "./db/product.js";
+import jwt from "jsonwebtoken";
 
 const app = express();
+const JWT_KEY = "omidhokate2002";
 
 app.use(express.json());
 app.use(cors());
@@ -12,10 +14,17 @@ app.use(cors());
 app.post("/register", async (req, res) => {
   try {
     const user = new User(req.body);
-    const result = await user.save();
-    const sanitizedResult = { ...result.toObject(), password: undefined };
-    console.log("Registered User", user);
-    res.send(sanitizedResult);
+    let result = await user.save();
+    result = result.toObject();
+    delete result.password;
+    jwt.sign({ result }, JWT_KEY, { expiresIn: "24h" }, (error, token) => {
+      if (error) {
+        res.send({
+          result: "Something went wrong, Please try after some time.",
+        });
+      }
+      res.send({ result, auth: token });
+    });
   } catch (error) {
     console.error("Error registering user:", error);
     res
@@ -30,7 +39,14 @@ app.post("/login", async (req, res) => {
       const user = await User.findOne(req.body).select("-password");
       console.log("Logged In User", user);
       if (user) {
-        res.send(user);
+        jwt.sign({ user }, JWT_KEY, { expiresIn: "24h" }, (error, token) => {
+          if (error) {
+            res.send({
+              result: "Something went wrong, Please try after some time.",
+            });
+          }
+          res.send({ user, auth: token });
+        });
       } else {
         res.send({ result: "User not found." });
       }
@@ -43,7 +59,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post("/add-product", async (req, res) => {
+app.post("/add-product", verifyToken, async (req, res) => {
   try {
     const product = new Product(req.body);
     const result = await product.save();
@@ -56,7 +72,7 @@ app.post("/add-product", async (req, res) => {
   }
 });
 
-app.get("/products", async (req, res) => {
+app.get("/products", verifyToken, async (req, res) => {
   try {
     const products = await Product.find({});
     if (products.length > 0) {
@@ -72,7 +88,7 @@ app.get("/products", async (req, res) => {
   }
 });
 
-app.delete("/product/:id", async (req, res) => {
+app.delete("/product/:id", verifyToken, async (req, res) => {
   const id = req.params.id;
   console.log("Deleting product with id:", id);
 
@@ -92,7 +108,7 @@ app.delete("/product/:id", async (req, res) => {
   }
 });
 
-app.get("/product/:id", async (req, res) => {
+app.get("/product/:id", verifyToken, async (req, res) => {
   let result = await Product.findOne({ _id: req.params.id });
 
   if (result) {
@@ -104,7 +120,7 @@ app.get("/product/:id", async (req, res) => {
   }
 });
 
-app.put("/product/:id", async (req, res) => {
+app.put("/product/:id", verifyToken, async (req, res) => {
   let result = await Product.updateOne(
     { _id: req.params.id },
     {
@@ -114,7 +130,7 @@ app.put("/product/:id", async (req, res) => {
   res.send(result);
 });
 
-app.get("/search/:key", async (req, res) => {
+app.get("/search/:key", verifyToken, async (req, res) => {
   try {
     const key = req.params.key;
 
@@ -131,6 +147,24 @@ app.get("/search/:key", async (req, res) => {
     res.status(500).send(error);
   }
 });
+
+function verifyToken(req, res, next) {
+  let token = req.headers["authorization"];
+  if (token) {
+    token = token.split(" ")[1];
+
+    console.log("MiddleWare Called", token);
+    jwt.verify(token, JWT_KEY, (error, valid) => {
+      if (error) {
+        res.status(401).send({ result: "Please provide valid token" });
+      } else {
+        next();
+      }
+    });
+  } else {
+    res.status(403).send({ result: "Please add token with header" });
+  }
+}
 
 const port = 5000;
 app.listen(port, () => {
