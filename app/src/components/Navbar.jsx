@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+// import Logo from "../images/logo.png";
 
 const Navbar = () => {
   const auth = localStorage.getItem("user");
@@ -7,51 +8,51 @@ const Navbar = () => {
     localStorage.clear();
     navigate("/signup");
   };
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <ul className="navbar-nav mr-auto">
-        <li className="nav-item">
-          <Link to="/" className="nav-link">
-            Product
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link to="/add" className="nav-link">
-            Add Product
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link to="/update" className="nav-link">
-            Update Product
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link to="/profile" className="nav-link">
-            Profile
-          </Link>
-        </li>
-        <li className="nav-item"></li>
-        <li className="nav-item">
-          {auth ? (
-            <Link
-              to="/signup"
-              className="nav-link"
-              style={{ position: "absolute", right: 0 }}
-              onClick={logout}
-            >
-              Logout
+    <nav className="navbar navbar-expand-md navbar-dark bg-dark">
+      {auth ? (
+        <ul className="navbar-nav">
+          <li className="nav-item">
+            <Link to="/" className="nav-link">
+              Product
             </Link>
-          ) : (
-            <Link
-              to="/signup"
-              className="nav-link"
-              style={{ position: "absolute", right: 0 }}
-            >
+          </li>
+          <li className="nav-item">
+            <Link to="/add" className="nav-link">
+              Add Product
+            </Link>
+          </li>
+          {/* <li className="nav-item">
+            <Link to="/update" className="nav-link">
+              Update Product
+            </Link>
+          </li> */}
+          {/* <li className="nav-item">
+            <Link to="/profile" className="nav-link">
+              Profile
+            </Link>
+          </li> */}
+          <li className="nav-item">
+            <Link to="/signup" className="nav-link" onClick={logout}>
+              Logout ({JSON.parse(auth).name})
+            </Link>
+          </li>
+        </ul>
+      ) : (
+        <ul className="navbar-nav">
+          <li className="nav-item">
+            <Link to="/login" className="nav-link">
+              Login
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/signup" className="nav-link">
               Sign Up
             </Link>
-          )}
-        </li>
-      </ul>
+          </li>
+        </ul>
+      )}
     </nav>
   );
 };

@@ -11,13 +11,12 @@ const Footer = () => {
       }}
     >
       <h3
-        style={{
-          fontSize: "18px",
-          fontWeight: "bold",
-          textShadow: "0px 1px 2px rgba(255, 255, 255, 0.8)",
-        }}
+        className="mb-0 font-weight-bold text-shadow"
+        style={{ fontSize: "18px" }}
       >
-        E-DASHBOARD
+        <span className="badge badge-primary badge-pill px-3 py-2">
+          E-DASHBOARD
+        </span>
       </h3>
     </div>
   );

@@ -7,31 +7,32 @@ import Profile from "./components/Profile";
 import Footer from "./components/Footer";
 import Signup from "./components/Signup";
 import PrivateCompo from "./components/PrivateComp";
+import Login from "./components/Login";
 
 function App() {
   return (
-    <>
+    <div>
       <Navbar />
       <div
         style={{
-          position: "relative",
-          paddingBottom: "60px",
+          marginTop: "150px",
         }}
       >
         <Routes>
           <Route element={<PrivateCompo />}>
             <Route path="/" element={<Product />} />
             <Route path="/add" element={<AddProduct />} />
-            <Route path="/update" element={<UpdateProducts />} />
+            <Route path="/update/:id" element={<UpdateProducts />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/logout" element={<h3>Logout</h3>} />
           </Route>
 
           <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
         <Footer />
       </div>
-    </>
+    </div>
   );
 }
 

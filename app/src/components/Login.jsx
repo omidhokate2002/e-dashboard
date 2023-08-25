@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Signup = () => {
-  const [name, setName] = useState("");
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -14,20 +13,20 @@ const Signup = () => {
     }
   }, [navigate]);
 
-  const collectData = async () => {
-    let result = await fetch("http://localhost:5000/register", {
+  const handleLogin = async () => {
+    let result = await fetch("http://localhost:5000/login", {
       method: "post",
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({ email, password }),
       headers: { "Content-Type": "application/json" },
     });
 
     result = await result.json();
 
-    localStorage.setItem("user", JSON.stringify(result));
-
-    if (result) {
+    if (result.name) {
       localStorage.setItem("user", JSON.stringify(result));
       navigate("/");
+    } else {
+      alert("Please enter correct details.");
     }
   };
 
@@ -35,20 +34,11 @@ const Signup = () => {
     <div className="container">
       <div className="card mx-auto mt-5" style={{ maxWidth: "400px" }}>
         <div className="card-header bg-dark text-white">
-          <h1 className="card-title">Register</h1>
+          <h1 className="card-title">Login</h1>
         </div>
         <div className="card-body">
           <input
-            type="text"
-            placeholder="Enter Name"
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
-            className="form-control mb-3"
-          />
-          <input
-            type="text"
+            type="email"
             placeholder="Enter Email"
             value={email}
             onChange={(e) => {
@@ -66,16 +56,12 @@ const Signup = () => {
             className="form-control mb-4"
           />
         </div>
-        <button
-          type="button"
-          onClick={collectData}
-          className="btn btn-dark btn-lg"
-        >
-          Sign Up
+        <button onClick={handleLogin} className="btn btn-dark btn-lg btn-block">
+          Login
         </button>
       </div>
     </div>
   );
 };
 
-export default Signup;
+export default Login;
