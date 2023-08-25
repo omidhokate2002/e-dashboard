@@ -16,19 +16,22 @@ const AddProduct = () => {
     const userId = JSON.parse(localStorage.getItem("user"))._id;
     console.log(userId);
 
-    const result = await fetch("http://localhost:5000/add-product", {
-      method: "post",
-      body: JSON.stringify({
-        name,
-        price,
-        category,
-        company,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `bearer ${JSON.parse(localStorage.getItem("token"))}`,
-      },
-    });
+    const result = await fetch(
+      "https://e-commerce-backend-u0r1.onrender.com/add-product",
+      {
+        method: "post",
+        body: JSON.stringify({
+          name,
+          price,
+          category,
+          company,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `bearer ${JSON.parse(localStorage.getItem("token"))}`,
+        },
+      }
+    );
 
     const response = await result.json();
     console.log(response);

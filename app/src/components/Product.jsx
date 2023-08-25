@@ -10,11 +10,16 @@ const Product = () => {
 
   const getProducts = async () => {
     try {
-      const response = await fetch("http://localhost:5000/products", {
-        headers: {
-          authorization: `bearer ${JSON.parse(localStorage.getItem("token"))}`,
-        },
-      });
+      const response = await fetch(
+        "https://e-commerce-backend-u0r1.onrender.com/products",
+        {
+          headers: {
+            authorization: `bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
+          },
+        }
+      );
       const data = await response.json();
       setProducts(data);
     } catch (error) {
@@ -24,12 +29,17 @@ const Product = () => {
 
   const deleteProduct = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/product/${id}`, {
-        method: "DELETE",
-        headers: {
-          authorization: `bearer ${JSON.parse(localStorage.getItem("token"))}`,
-        },
-      });
+      const response = await fetch(
+        `https://e-commerce-backend-u0r1.onrender.com/product/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            authorization: `bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
+          },
+        }
+      );
 
       if (response.ok) {
         getProducts();
@@ -45,13 +55,16 @@ const Product = () => {
     const key = event.target.value;
     if (key) {
       try {
-        const response = await fetch(`http://localhost:5000/search/${key}`, {
-          headers: {
-            authorization: `bearer ${JSON.parse(
-              localStorage.getItem("token")
-            )}`,
-          },
-        });
+        const response = await fetch(
+          `https://e-commerce-backend-u0r1.onrender.com/search/${key}`,
+          {
+            headers: {
+              authorization: `bearer ${JSON.parse(
+                localStorage.getItem("token")
+              )}`,
+            },
+          }
+        );
         const result = await response.json();
         if (response.ok) {
           setProducts(result);
@@ -99,7 +112,7 @@ const Product = () => {
                         <tr key={product._id}>
                           <th scope="row">{index + 1}</th>
                           <td>{product.name}</td>
-                          <td>${product.price}</td>
+                          <td>₹{product.price}</td>
                           <td>{product.category}</td>
                           <td>{product.company}</td>
                           <td>

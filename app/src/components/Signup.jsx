@@ -15,11 +15,14 @@ const Signup = () => {
   }, [navigate]);
 
   const collectData = async () => {
-    let result = await fetch("http://localhost:5000/register", {
-      method: "post",
-      body: JSON.stringify({ name, email, password }),
-      headers: { "Content-Type": "application/json" },
-    });
+    let result = await fetch(
+      "https://e-commerce-backend-u0r1.onrender.com/register",
+      {
+        method: "post",
+        body: JSON.stringify({ name, email, password }),
+        headers: { "Content-Type": "application/json" },
+      }
+    );
 
     result = await result.json();
 
